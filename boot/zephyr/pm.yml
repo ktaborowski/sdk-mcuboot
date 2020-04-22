@@ -16,7 +16,7 @@ mcuboot_primary:
 
 mcuboot_secondary:
   region: external_flash
-  size: 0xd0000
+  size: CONFIG_PM_EXTERNAL_FLASH_SIZE
 
 #ifndef CONFIG_BOOT_SWAP_USING_MOVE
 mcuboot_scratch:
