@@ -26,6 +26,10 @@
 #include "swap_priv.h"
 #include "bootutil/bootutil_log.h"
 
+#ifdef __ZEPHYR__
+#include <zephyr/kernel.h>
+#endif
+
 #include "mcuboot_config/mcuboot_config.h"
 
 BOOT_LOG_MODULE_DECLARE(mcuboot);
@@ -555,6 +559,9 @@ swap_run(struct boot_loader_state *state, struct boot_status *bs,
 
     image_index = BOOT_CURR_IMG(state);
 
+    uint32_t start_time, end_time;
+    start_time = k_uptime_get_32();
+
     rc = flash_area_open(FLASH_AREA_IMAGE_PRIMARY(image_index), &fap_pri);
     assert (rc == 0);
 
@@ -586,6 +593,9 @@ swap_run(struct boot_loader_state *state, struct boot_status *bs,
 
     flash_area_close(fap_pri);
     flash_area_close(fap_sec);
+
+    end_time = k_uptime_get_32();
+    BOOT_LOG_INF("swap took %u ms", end_time - start_time);
 }
 
 int app_max_size(struct boot_loader_state *state)
